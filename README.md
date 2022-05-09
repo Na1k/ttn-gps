@@ -1,103 +1,103 @@
-# Mise en place d'un traqueur GPS via LoRa(Wan)
-![UML](uml.png)
+# Setting up a GPS tracker via LoRa(Wan)
+![UML](img/uml.png)
 
 ISO : https://drive.google.com/file/d/1YTdmb8JlvePSKiniwBKYyqXx-m-NhzIe/view?usp=sharing
 
-## Installation du routeur sur Internet (via WiFi)
+## Installing the router on the Internet (via WiFi)
 
-N.B. : Pourquoi via WiFi ? Dans le cas particulier de l'Université de Perpignan Via Domitia, le FireWall "n'aime" pas les connections sur le port 1700 nécessaire à l'établissement de la connection routeur -> TheThingsNetwork.
+N.B.: Why via WiFi? In the particular case of the University of Perpignan Via Domitia, the FireWall "does not like" connections on port 1700 necessary to establish the router -> TheThingsNetwork connection.
 
-- On le branche sur secteur via USB-C 5V-2A
-un réseau WiFi dragino-XXXXXX apparait. 
-- On se connecte à ce réseau via le mot de passe par défault du routeur :
-"dragino+dragino" (sans les guillemets)
-- Sur le navigateur on va sur l'IP 10.130.1.1 un couple Id/MdP est demandé par le dragino (par défaut) "root" / "dragino"
-- Pour le WiFi Client (Le dragino fournit pour l'instant un serveur web mais n'est pas connecté à Internet !) On clique sur Enable WiFi-Wan Client avec le couple SSID/MdP d'un smartphone par example.
+- It is connected to the mains via USB-C 5V-2A
+a WiFi dragino-XXXXXX network appears. 
+- We connect to this network via the default password of the router:
+"dragino+dragino" (without the quotes)
+- On the browser we go to the IP 10.130.1.1 an Id/MdP couple is requested by the dragino (by default) "root" / "dragino
+- For the WiFi Client (The dragino provides a web server but is not connected to the Internet!) We click on Enable WiFi-Wan Client with the SSID/MdP pair of a smartphone for example.
   
-![WiFi_Dragino](WiFi_Dragino.png)
+![WiFi_Dragino](img/WiFi_Dragino.png)
 
-## Routage des paquets LoRa vers TheThingsNetwork
+## Routing LoRa packets to TheThingsNetwork
 
-- Créer un compte TheThingsNetwork.org (gratuit il faut fournir son courriel)
-- On peut voir l'identifiant par défaut du routeur (le Gateway EUI) sur l'onglet LoRa du serveur web du routeur (10.130.1.1)
-- De plus il faut choisir TheThingsNetwork v3 sur le menu déroulant en dessous (le v2 est disponible sur le routeur mais TheThingsNetwork qui maintient sa version 2 pour les anciens routeurs ne permet pas la création de nouveaux routeurs en v2)
-- Il faut aussi choisir eu1.cloud.thethings.network sur le deuxième menu déroulant confère images ci dessous.
+- Create a TheThingsNetwork.org account (free, you have to provide your email)
+- You can see the default router ID (the EUI Gateway) on the LoRa tab of the router web server (10.130.1.1)
+- In addition, you have to choose TheThingsNetwork v3 on the drop-down menu below (v2 is available on the router but TheThingsNetwork which maintains its version 2 for old routers does not allow the creation of new routers in v2)
+- You must also choose eu1.cloud.thethings.network on the second drop down menu below.
 
-![config_gw_ttn](config_gw_ttn.png)
+![config_gw_ttn](img/config_gw_ttn.png)
 
-L'identifiant du routeur (Gateway EUI) doit être le même que dans la configuration précedente. Le GatewayID est libre mais doit être unique sur ttn donc disponible. Le Gateway Name est quant à lui totalement libre.
-Enfin les Gateway Server Address doit correspondre au précedent soit pour l'Europe :
+The Router ID (Gateway EUI) must be the same as in the previous configuration. The GatewayID is free but must be unique on ttn and therefore available. The Gateway Name is completely free.
+Finally, the Gateway Server Address must correspond to the previous one, i.e. for Europe :
 eu1.cloud.thethings.network
 
-Le reste des options peut être laissé par défaut ou changé (si on sait pourquoi ;))
+The rest of the options can be left by default or changed (if you know why ;))
 
-Ca y est vous avez votre routeur connecté sur le LoRaWan.
+That's it, you have your router connected to the LoRaWan.
 
-![config_ttn_gw](config_ttn_gw.png)
+![config_ttn_gw](img/config_ttn_gw.png)
 
-## Préparation du RaspberryPi (l'objet connecté)
+## Preparing the RaspberryPi (the connected object)
 
-Un raspberry est un micro-ordinateur à peut près de la taile d'une CB avec la puissance d'un smartphone et des broches d'entrées-sortie électriques. Le système d'exploitation de ce matériel se trouve (en général et dans cette étude, sinon il peut être via NetBoot, USB, HDD, emmc) sur une carte SD préparée par exemple de la manière suivante :
+A raspberry is a microcomputer about the size of a CB with the power of a smartphone and electrical input/output pins. The operating system of this hardware is (in general and in this study, otherwise it can be via NetBoot, USB, HDD, emmc) on an SD card prepared for example as follows:
 
-### La carte SD :
+### The SD card :
 
-Télécharger Raspi-Imager sur le site officiel de Raspberry
+Download Raspi-Imager from the official Raspberry website
 https://www.raspberrypi.com/software/
 
-Pour installer raspi-imager sur un ordinateur hôte ubuntu récent il suffit d'ouvrir une fenêtre de commandes (Ctrl-Alt-T) et de taper
+To install raspi-imager on a recent ubuntu host computer simply open a command window (Ctrl-Alt-T) and type
 
 ```bash
 sudo snap install rpi-imager
 ```
 
-Ensuite on sélectionne l'OS suivant (Debian Bullseye le premier de la liste et le dernier existant au moment où sont écris ces mots)
+Then select the following OS (Debian Bullseye the first in the list and the last existing at the time of writing)
 
-![choose_os](choose_os.png)
+![choose_os](img/choose_os.png)
 
-et on sélectionne les options suivantes
+and select the following options
 
-ssh : username/password (conseil : "pi"/"raspberry")
-Wifi : le WiFi du télephone ou n'importe lequel auquel on a accès
-optionnel : set hostname = raspberry.local
+ssh: username/password (hint: "pi"/"raspberry")
+Wifi : the WiFi of the phone or any other one you have access to
+optional : set hostname = raspberry.local
 
-![options_sd_rpi](options_sd_rpi.png)
+![options_sd_rpi](img/options_sd_rpi.png)
 
-Ensuite on sélectionne le media sur lequel on va écrire et on choisi enfin écrire.
+Then we select the media we are going to write to and we choose to write.
 
-On met la carte une fois terminé ça y est le raspberry devrait tourner avec un OS. On peut vérifier via HDMI sur un écran. Ou si on veut on peut accéder en ssh si l'ordinateur se trouve sur le même réseau local que le raspberry.
-Si le réseau est en 192.168.1.0/24 il faut faire
+We put the card once finished that's it the raspberry should run with an OS. We can check via HDMI on a screen. Or if you want you can ssh access if the computer is on the same local network as the raspberry.
+If the network is 192.168.1.0/24 you need to do
 
 ```bash
 nmap 192.168.1.1-254 -p 22
 ```
 
-pour connaître l'adresse du rpi. Ou encore si on ne connait pas les octets de l'ip du gateway
+to find out the rpi address. Or if you don't know the gateway ip bytes
 
 ```bash
 sudo arp -a
 ```
 
-Enfin pour accéder à un shell sur ce même rpi 
+Finally, to access a shell on the same rpi 
 
 ```bash
-ssh pi@ip_du_pi_trouvée_précedemment
+ssh pi@ip_of_the_pi_previously_found
 ```
 
-ou 
+or 
 
 ```bash
 ssh pi@raspberrypi.local
 ```
 
-### Installation et configuration du Hat Dragino (GPS/LoRa) sur le raspberry 
+### Installing and configuring the Dragino Hat (GPS/LoRa) on the raspberry 
 
-Une fois sur le shell du rpi comme toujours :
+Once on the rpi shell as always:
 
 ```bash
 sudo apt update && sudo apt upgrade
 ```
 
-Ensuite on installe les paquets nécessaires :
+Then we install the necessary packages:
 
 ```bash
 sudo apt install git device-tree-compiler git python3-crypto python3-nmea2 python3-rpi.gpio python3-serial python3-spidev python3-configobj gpsd libgps-dev gpsd-clients python3-pip
@@ -127,20 +127,20 @@ DEVICES="/dev/ttyAMA0"
 GPSD_OPTIONS="-n"
 ```
 
-Ensuite on rajoute au fichier /boot/config.txt les lignes suivantes :
+Then we add the following lines to /boot/config.txt:
 
 ```
 enable_uart=1
 dtoverlay=miniuart-bt
 dtoverlay=spi-gpio-cs
 ```
-On modifie le fichier /boot/cmdline.txt de façon à ce qu'il devienne
+Change the /boot/cmdline.txt file to
 
 ```
 dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
 ```
 
-Ensuite dans le /home/pi
+Then in /home/pi
 
 ```bash
 git clone https://github.com/computenodes/dragino
@@ -150,13 +150,13 @@ sudo cp spi-gpio-cs.dtbo /boot/overlays/
 sudo reboot
 ```
 
-Ensuite dans /home/pi on crée le fichier gpscron tel que :
+Then in /home/pi we create the file gpscron as :
 
 ```bash
 #!/bin/bash
 sudo python3 /home/pi/dragino/test_cayenne.py
 ```
-dans /home/pi/dragino on écrit le fichier test_cayenne.py tel que :
+in /home/pi/dragino we write the file test_cayenne.py as :
 
 ```python
 #!/usr/bin/env python3
@@ -173,7 +173,7 @@ import gpsd
 from simplecayennelpp import CayenneLPP # import the module required to pack th$
 import binascii
 # importing the module
-# Connect to the local gpsd
+# connect to the local gpsd
 gpsd.connect()
 packet = gpsd.get_current()
 # See the inline docs for GpsResponse for the available data
@@ -205,7 +205,7 @@ for i in range(0, 2):
     sleep(1)
 ```
 
-On prend le fichier /home/pi/dragino/dragino.ini.default et on le réecrit sous /home/pi/dragino/dragino.ini de la manière suivante
+We take the /home/pi/dragino/dragino.ini.default file and rewrite it to /home/pi/dragino/dragino.ini as follows
 
 ```
 gps_baud_rate = 9600
@@ -224,90 +224,90 @@ fcount_filename = .lora_fcount
 
 ##Valid auth modes are ABP or OTAA
 ##All values are hex arrays eg devaddr = 0x01, 0x02, 0x03, 0x04
-#auth_mode = "abp"
+#auth_mode = "abp
 #devaddr = 
 #nwskey = 
 #appskey =
 
 auth_mode = otaa
 deveui = 0xFF, 0xFE, 0xFD, 0xFC, 0xFC, 0xFD, 0xFE, 0xFF
-appeui = 0x70, 0xB3, 0xD5, 0x00, 0x00, 0xD5, 0xB3, 0x70
+appkey = 0x70, 0xB3, 0xD5, 0x00, 0x00, 0xD5, 0xB3, 0x70
 appkey = 0x3D, 0x83, 0xC3, 0x16, 0x2C, 0xAD, 0x44, 0xB7, 0xB0, 0x50, 0x6C, 0x3C, 0xA1, 0x54, 0x36, 0xB7
 ```
 
-En choisissant les deveui, appeui de façons à ce qu'ils soient uniques sur ttn. Et l'appkey avec suffisament d'entropie pour ne pas qu'on puisse la brute-forcer.
+When choosing the deveui, call them in such a way that they are unique on ttn. And the appkey with enough entropy that it cannot be brute-forced.
 
-Enfin pour executer le script python toutes les minutes :
+Finally to run the python script every minute:
 
 ```bash
 sudo crontab -e
 ```
-On sélectionne son éditeur préféré
-et on ajoute la ligne
+Select your favourite editor
+and add the line
 
 ```
 * * * * * /home/pi/gpscron
 ```
 
-à la fin du fichier.
-Du coté du raspberry tout doit être prêt maintenant
+at the end of the file.
+On the raspberry side everything should be ready now
 
-## Connection de l'objet au LoRaWan (thethingsnetwork)
+## Connect the object to the LoRaWan (thethingsnetwork)
 
-On va dans applications on créé une application ensuite on va dans enddevices et on choisi + Add Endevice
+We go in applications we create an application then we go in enddevices and we choose + Add Endevice
 
-![add_enddevice](add_enddevice.png)
+![add_enddevice](img/add_enddevice.png)
 
-Ensuite on choisi les paramètres de l'objet (AppEUI, DevEUI, AppKey) pour qu'ils correspondent à ceux établis précédemments dans /home/pi/dragino/dragino.ini
+Then we choose the parameters of the object (AppEUI, DevEUI, AppKey) so that they correspond to those established previously in /home/pi/dragino/dragino.ini
 
-soit dans l'exemple de cette étude :
+i.e. in the example of this study :
 
 ```
 deveui = 0xFF, 0xFE, 0xFD, 0xFC, 0xFC, 0xFD, 0xFE, 0xFF
-appeui = 0x70, 0xB3, 0xD5, 0x00, 0x00, 0xD5, 0xB3, 0x70
+appkey = 0x70, 0xB3, 0xD5, 0x00, 0x00, 0xD5, 0xB3, 0x70
 appkey = 0x3D, 0x83, 0xC3, 0x16, 0x2C, 0xAD, 0x44, 0xB7, 0xB0, 0x50, 0x6C, 0x3C, 0xA1, 0x54, 0x36, 0xB7
 ```
 
-![register_enddevice](register_enddevice.png)
+![register_enddevice](img/register_enddevice.png)
 
 
-Démarrer le pi (truc et astuces pour le GPS !!!!!)
+Starting the pi (GPS tips and tricks !!!!!)
 
-Sur le shell du pi :
+On the pi shell:
 
 ```bash
-sudo ntpdate fr.pool.ntp.org
+sudo ntpdate en.pool.ntp.org
 ```
-Mettre le RPi en extérieur
-Débrancher le jumper GPS Tx du Hat dragino alimenter le RPi attendre le 3D fix (la diode verte du dragino, pas du RPi) et brancher (à chaud) le jumper Tx.
+Put the RPi outside
+Unplug the GPS Tx jumper from the Hat dragino power the RPi wait for the 3D fix (the green LED on the dragino, not the RPi) and plug (hot) the Tx jumper.
 
-Ca devrait y être vous avez votre premier (?) objet connecté (au LoRaWan)
+That should be it you have your first (?) connected object (to LoRaWan)
 
-## Format du message
+## Message format
 
-Enfin dans le cas de cette étude nous avons choisi de mettre le payload sous la forme CayenneLPP on verra pourquoi par la suite. Pour que TheThingsNetwork puisse interpréter le payload il faut le lui dire 
+Finally in the case of this study we chose to put the payload in the form CayenneLPP we will see why later. In order for TheThingsNetwork to interpret the payload, it must be told 
 
-![format_cayenne](format_cayenne.png)
+![format_cayenne](img/format_cayenne.png)
 
 
-Pour voir l'objet sur ttn allez dans l'application que vous venez de créer séléctionner votre enddevice  et live data vous devriez voir quelquechose comme
+To see the object on ttn go to the application you just created select your enddevice and live data you should see something like
 
-![coordonnees_ttn](coordonnees_ttn.png)
+![coordonnees_ttn](img/coordonnees_ttn.png)
 
-## Gestion des données (Intégration à Cayenne)
+## Data management (Cayenne integration)
 
-Aller sur https://mydevices.com/
+Go to https://mydevices.com/
 
-Créer un compte Cayenne
+Create a Cayenne account
 
-Séléctionner TheThingsNetwork
+Select TheThingsNetwork
 
-![add_new_cayenne](add_new_cayenne.png)
+![add_new_cayenne](img/add_new_cayenne.png)
 
-Sélection Dragino RPi Hat et mettre le DevEUI
+Dragino RPi Hat selection and put the DevEUI
 
-![dragino_cayenne](dragino_cayenne.png)
+![dragino_cayenne](img/dragino_cayenne.png)
 
-![gps_live](gps_live.png)
+![gps_live](img/gps_live.png)
 
-Données en live du traqueur GPS !!!!!!!!!!
+Live data from the GPS tracker !!!!!!!!!!
