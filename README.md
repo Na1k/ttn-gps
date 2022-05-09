@@ -1,3 +1,5 @@
+The ReadMe was originally written in french, unfortunately I don't speak that language, so [Deepl](https://www.deepl.com/translator) translated it.
+
 # Setting up a GPS tracker via LoRa(Wan)
 ![UML](img/uml.png)
 
