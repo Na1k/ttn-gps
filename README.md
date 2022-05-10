@@ -2,47 +2,10 @@ The ReadMe was originally written in french, unfortunately I don't speak that la
 
 # Setting up a GPS tracker via LoRa(Wan)
 ![UML](img/uml.png)
+ISO (not verified by me @Na1k) : https://drive.google.com/file/d/1YTdmb8JlvePSKiniwBKYyqXx-m-NhzIe/view?usp=sharing
 
-ISO : https://drive.google.com/file/d/1YTdmb8JlvePSKiniwBKYyqXx-m-NhzIe/view?usp=sharing
 
-## Installing the router on the Internet (via WiFi)
-
-N.B.: Why via WiFi? In the particular case of the University of Perpignan Via Domitia, the FireWall "does not like" connections on port 1700 necessary to establish the router -> TheThingsNetwork connection.
-
-- It is connected to the mains via USB-C 5V-2A
-a WiFi dragino-XXXXXX network appears. 
-- We connect to this network via the default password of the router:
-"dragino+dragino" (without the quotes)
-- On the browser we go to the IP 10.130.1.1 an Id/MdP couple is requested by the dragino (by default) "root" / "dragino
-- For the WiFi Client (The dragino provides a web server but is not connected to the Internet!) We click on Enable WiFi-Wan Client with the SSID/MdP pair of a smartphone for example.
-  
-![WiFi_Dragino](img/WiFi_Dragino.png)
-
-## Routing LoRa packets to TheThingsNetwork
-
-- Create a TheThingsNetwork.org account (free, you have to provide your email)
-- You can see the default router ID (the EUI Gateway) on the LoRa tab of the router web server (10.130.1.1)
-- In addition, you have to choose TheThingsNetwork v3 on the drop-down menu below (v2 is available on the router but TheThingsNetwork which maintains its version 2 for old routers does not allow the creation of new routers in v2)
-- You must also choose eu1.cloud.thethings.network on the second drop down menu below.
-
-![config_gw_ttn](img/config_gw_ttn.png)
-
-The Router ID (Gateway EUI) must be the same as in the previous configuration. The GatewayID is free but must be unique on ttn and therefore available. The Gateway Name is completely free.
-Finally, the Gateway Server Address must correspond to the previous one, i.e. for Europe :
-eu1.cloud.thethings.network
-
-The rest of the options can be left by default or changed (if you know why ;))
-
-That's it, you have your router connected to the LoRaWan.
-
-![config_ttn_gw](img/config_ttn_gw.png)
-
-## Preparing the RaspberryPi (the connected object)
-
-A raspberry is a microcomputer about the size of a CB with the power of a smartphone and electrical input/output pins. The operating system of this hardware is (in general and in this study, otherwise it can be via NetBoot, USB, HDD, emmc) on an SD card prepared for example as follows:
-
-### The SD card :
-
+## SD-Card - Raspi OS
 Download Raspi-Imager from the official Raspberry website
 https://www.raspberrypi.com/software/
 
@@ -91,7 +54,7 @@ or
 ssh pi@raspberrypi.local
 ```
 
-### Installing and configuring the Dragino Hat (GPS/LoRa) on the raspberry 
+## Installing and configuring the Dragino Hat (GPS/LoRa) on the raspberry 
 
 Once on the rpi shell as always:
 
@@ -103,12 +66,10 @@ Then we install the necessary packages:
 
 ```bash
 sudo apt install git device-tree-compiler git python3-crypto python3-nmea2 python3-rpi.gpio python3-serial python3-spidev python3-configobj gpsd libgps-dev gpsd-clients python3-pip
-pip3 install simplecayennelpp
-git clone https://github.com/bbaranoff/libgps
-cd libgps
-make 
-sudo make install
-sudo ldconfig
+pip3 install cayenneLPP
+pip3 install pycrypto
+pip3 install gpsd-py3
+
 nano /etc/default/gpsd
 ```
 
@@ -164,7 +125,7 @@ in /home/pi/dragino we write the file test_cayenne.py as :
 #!/usr/bin/env python3
 """
     Test harness for dragino module - sends hello world out over LoRaWAN 5 times
-"""
+"""python
 import logging
 from datetime import datetime
 from time import sleep
@@ -172,7 +133,7 @@ import RPi.GPIO as GPIO
 from dragino import Dragino
 #import subprocess
 import gpsd
-from simplecayennelpp import CayenneLPP # import the module required to pack th$
+from cayenneLPP import CayenneLPP # import the module required to pack th$
 import binascii
 # importing the module
 # connect to the local gpsd
@@ -207,7 +168,7 @@ for i in range(0, 2):
     sleep(1)
 ```
 
-We take the /home/pi/dragino/dragino.ini.default file and rewrite it to /home/pi/dragino/dragino.ini as follows
+We take the /home/pi/dragino/dragino.ini.default file and rewrite it to /home/pi/dragino/**dragino.ini** as follows
 
 ```
 gps_baud_rate = 9600
