@@ -1,8 +1,8 @@
 The ReadMe was originally written in french, unfortunately I don't speak that language, so [Deepl](https://www.deepl.com/translator) translated it.
 
 # Setting up a GPS tracker via LoRa(Wan)
-![UML](img/uml.png)
-ISO (not verified by me @Na1k) : https://drive.google.com/file/d/1YTdmb8JlvePSKiniwBKYyqXx-m-NhzIe/view?usp=sharing
+![UML](img/uml.png)  
+ready to use ISO by @bbaranoff (not verified by me @Na1k) : https://drive.google.com/file/d/1YTdmb8JlvePSKiniwBKYyqXx-m-NhzIe/view?usp=sharing
 
 
 ## SD-Card - Raspi OS
