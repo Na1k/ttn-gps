@@ -21,6 +21,6 @@ setuptools.setup(
     keywords="LoRaWAN",
     platforms='any',
     python_requires='>=3.3, <4',
-    install_requires=['pyserial', 'configobj', 'spidev', 'rpi.GPIO', 'pycrypto', 'pynmea2'],
+    install_requires=['pyserial', 'configobj', 'spidev', 'rpi-gpio', 'pycrypto', 'pynmea2'],
     packages=setuptools.find_packages(),
 )

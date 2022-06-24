@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
     Test harness for dragino module - sends hello world out over LoRaWAN 5 times
@@ -10,10 +9,10 @@ import RPi.GPIO as GPIO
 from dragino import Dragino
 #import subprocess
 import gpsd
-from simplecayennelpp import CayenneLPP # import the module required to pack th$
+from cayenneLPP import CayenneLPP # import the module required to pack th$
 import binascii
 # importing the module
-# Connect to the local gpsd
+# connect to the local gpsd
 gpsd.connect()
 packet = gpsd.get_current()
 # See the inline docs for GpsResponse for the available data
@@ -24,8 +23,8 @@ alt = packet.alt
 
 print (lat, lon, alt)
 lpp = CayenneLPP()
-lpp.addGPS( 1, lat, lon, alt)
-text=binascii.hexlify(lpp.getBuffer()).decode()
+lpp.add_gps( lat, lon, alt)
+text=binascii.hexlify(lpp.get_payload()).decode()
 sent=list(binascii.unhexlify(text))
 print(text)
 logLevel=logging.DEBUG
@@ -41,6 +40,5 @@ for i in range(0, 2):
     while D.transmitting:
         pass
     end = datetime.utcnow()
-    print("Sent Hello World message ({})".format(end-start))
+    print("Sent GPS coordinates ({})".format(end-start))
     sleep(1)
-

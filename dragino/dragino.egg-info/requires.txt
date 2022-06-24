@@ -1,6 +1,0 @@
-configobj
-pycrypto
-pynmea2
-pyserial
-rpi.GPIO
-spidev
